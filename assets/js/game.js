@@ -13,6 +13,11 @@ var enemyNames = ["Roborto", "Amy Android", "Robo Trumble"];
 var enemyHealth = 15;
 var enemyAttack = 12;
 
+var priceAttack = 7;
+var priceHealth = 7;
+var boughtAttack = 6;
+var boughtHealth = 20;
+
 var fight = function(enemyName) {
     // alert players that they are starting the round
 
@@ -30,8 +35,8 @@ var fight = function(enemyName) {
                 playerMoney = playerMoney - 10;
                 console.log(playerName + " now has " + playerMoney + " money remaing.");
                 break;
-            };
-        };
+            }
+        }
 
         // remove enemy's health by subtracting teh amount in playerAttack variable
         enemyHealth = enemyHealth - playerAttack;
@@ -51,7 +56,7 @@ var fight = function(enemyName) {
         }
         else {
             window.alert(enemyName + " still has " + enemyHealth + " health left.");
-        };
+        }
 
         // remove player"s health by subtracting the amount set in the enemyAttack variable
         playerHealth = playerHealth - enemyAttack;
@@ -67,8 +72,8 @@ var fight = function(enemyName) {
             break;
         } else {
             window.alert(playerName + " still has " + playerHealth + " health left.");
-        };
-    };
+        }
+    }
 };
 
 // function to start a new game
@@ -91,12 +96,72 @@ var startGame = function() {
     
             // call fight function with enemy-robot
             fight(pickedEnemyName);
+
+            //if we're not at the last enemy in the array
+            if (playerHealth > 0 && i < enemyNames.length - 1) {
+                // ask if player wants to use the store before next round
+                var storeConfirm = window.confirm("The fight is over, visit the store before the next round?");
+
+                // if yes, take them to the store() function
+                if (storeConfirm) {
+                    shop();
+                }
+            }
         } else {
             window.alert("You have lost your robot in battle! Game over!");
-        };
-    };
+        }
+    }
     // out of health or enemies
     endGame();
+};
+
+var shop = function() {
+    // ask player what they'd like to do
+    var shopOptionPrompt = window.prompt(
+        "Would you like to REFILL your health, UPGRADE your attack, or LEAVE to make a choice?"
+    );
+    //use switch to carry out action
+    switch (shopOptionPrompt) {
+        case "refill":
+        case "REFILL":
+            if (playerMoney >= priceHealth) {
+                window.alert("Refilling player's health by 20 for 7 dollars");
+    
+                // increase health and decrease money
+                playerHealth = playerHealth + boughtHealth;
+                playerMoney = playerMoney - priceHealth;
+            } else {
+                window.alert("You don't have enough money!")
+            }
+            break;
+
+        case "upgrade":
+        case "UPGRADE":
+            if (playerMoney >= priceAttack) {
+                window.alert("Upgrading player's attach by 6 for 7 dollars.");
+    
+                // increase attack and decrease money
+                playerAttack = playerAttack + boughtAttack;
+                playerMoney = playerMoney - priceAttack;
+            } else {
+                window.alert("You don't have enough money!");
+            }
+            break;
+
+        case "leave":
+        case "LEAVE":
+            window.alert("Leaving the store.");
+
+            //do nothing, so function will end
+            break;
+
+        default:
+            window.alert("You did not pick a valid option. Try again.");
+
+            //call shop() again to force player to pick a valid option
+            shop();
+            break;
+    }
 };
 
 // function to end a game
@@ -106,7 +171,7 @@ var endGame = function() {
         window.alert("Great job, you've survived the game! You now have a score of " + playerMoney + ".");
     } else {
         window.alert("You've lost your robot in battle.");
-    };
+    }
 
     // ask if they'd like to play again
     var playAgainConfirm = window.confirm("Would you like to play again?");
@@ -116,7 +181,7 @@ var endGame = function() {
         startGame();
     } else {
         window.alert("Thank you for playing Robot Gladiators! Come back soon!");
-    };
+    }
 };
 
 // start the game on page load
