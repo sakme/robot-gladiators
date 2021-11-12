@@ -7,8 +7,8 @@ var randomNumber = function(min, max) {
 
 var priceAttack = 7;
 var priceHealth = 7;
-var boughtAttack = 6;
-var boughtHealth = 20;
+var boughtAttack = 7;
+var boughtHealth = 30;
 
 var fight = function(enemy) {
     // alert players that they are starting the round
@@ -25,7 +25,7 @@ var fight = function(enemy) {
                 window.alert(playerInfo.name + " has decided to skip this fight. Goodby!");
                 //  subtract money from playerInfo.money for skipping
                 playerInfo.money = Math.max(0, playerInfo.money - 10);
-                console.log(playerInfo.name + " now has " + playerInfo.money + " money remaing.");
+                console.log(playerInfo.name + " now has " + playerInfo.money + " dollars remaining.");
                 break;
             }
         }
@@ -41,11 +41,12 @@ var fight = function(enemy) {
         );
 
         // check enemy"s health
-        if (enemy.health <=0) {
+        if (enemy.health <= 0) {
             window.alert(enemy.name + " has died!");
             
             //award player money for winning
-            playerInfo.money = playerInfo.money +20;
+            playerInfo.money = playerInfo.money + 20;
+            // console.log(playerInfo.money);
 
             // leave while loop since enemy is dead
             break;
@@ -76,9 +77,34 @@ var fight = function(enemy) {
 
 var playerInfo = {
     name: window.prompt("What is your robot's name?"),
-    health: randomNumber(40,60),
+    health: 1,
     attack: 10,
-    money: 10
+    money: 10,
+    reset: function() {
+        this.health = randomNumber(50,80);
+        this.money = 10;
+        this.attack = 10;
+    },
+    refillHealth: function() {
+        if (this.money >= priceHealth) {
+            window.alert("Refilling player's health by " + boughtHealth + " for " + priceHealth + " dollars.");
+                this.health += boughtHealth;
+                this.money -= priceHealth;
+                // console.log(playerInfo.health + " " + playerInfo.money);
+        } else {
+            window.alert("You don't have enough money!");
+        }
+    },
+    upgradeAttack: function() {
+        if (this.money >= priceAttack) {
+            window.alert("Upgrading player's attack by " + boughtAttack + " for " + priceAttack + " dollars.");
+                this.attack += boughtAttack;
+                this.money -= priceAttack;
+                // console.log(playerInfo.attack + " " + playerInfo.money);
+        } else {
+            window.alert("You don't have enough mondy!");
+        }
+    }
 };
 
 var enemyInfo = [
@@ -98,8 +124,9 @@ var enemyInfo = [
 
 // function to start a new game
 var startGame = function() {
+    // reset player stats
+    playerInfo.reset();
     for (var i = 0; i < enemyInfo.length; i++) {
-        console.log(enemyInfo.length);
         if (playerInfo.health > 0) {
             // indicate the round number
             window.alert("Welcome to Robot Gladiator's! Round " + (i + 1));
@@ -122,6 +149,9 @@ var startGame = function() {
                 if (storeConfirm) {
                     shop();
                 }
+            } else if (playerInfo.health <= 0) {
+                endGame();
+                break;
             }
         } else {
             // out of health or enemies
@@ -139,28 +169,12 @@ var shop = function() {
     switch (shopOptionPrompt) {
         case "refill":
         case "REFILL":
-            if (playerInfo.money >= priceHealth) {
-                window.alert("Refilling player's health by 20 for 7 dollars");
-    
-                // increase health and decrease money
-                playerInfo.health = playerInfo.health + boughtHealth;
-                playerInfo.money = playerInfo.money - priceHealth;
-            } else {
-                window.alert("You don't have enough money!")
-            }
+            playerInfo.refillHealth();
             break;
 
         case "upgrade":
         case "UPGRADE":
-            if (playerInfo.money >= priceAttack) {
-                window.alert("Upgrading player's attach by 6 for 7 dollars.");
-    
-                // increase attack and decrease money
-                playerInfo.attack = playerInfo.attack + boughtAttack;
-                playerInfo.money = playerInfo.money - priceAttack;
-            } else {
-                window.alert("You don't have enough money!");
-            }
+            playerInfo.upgradeAttack();
             break;
 
         case "leave":
