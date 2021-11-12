@@ -7,7 +7,7 @@ var randomNumber = function(min, max) {
     return value;
 };
 
-var playerHealth = randomNumber(40,60);
+var playerHealth = 30;
 var playerAttack = 12;
 var playerMoney = 12;
 
