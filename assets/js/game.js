@@ -29,7 +29,7 @@ var fightOrSkip = function() {
       if (confirmSkip) {
         window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
         // subtract money from playerMoney for skipping
-        playerInfo.playerMoney = playerInfo.money - 10;
+        playerInfo.money = playerInfo.money - 10;
         return true;
       }
     }
@@ -228,11 +228,20 @@ var shop = function() {
 
 // function to end a game
 var endGame = function() {
-    // if player is still alive, player wins
-    if (playerInfo.health > 0) {
-        window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + ".");
+    window.alert("The game has ended. Let's see how you did!");
+
+    var highScore = localStorage.getItem("highscore");
+
+    if (highScore === null) {
+        highScore = 0;
+    }
+
+    if (playerInfo.money > highScore) {
+        localStorage.setItem("highscore",playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        window.alert(playerInfo.name + " now has the high score of " + playerInfo.money + "!");
     } else {
-        window.alert("You've lost your robot in battle.");
+        window.alert(playerInfo.name + " did not beat the high score of " + highScore + "!");
     }
 
     // ask if they'd like to play again
